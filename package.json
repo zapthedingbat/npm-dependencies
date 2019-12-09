@@ -18,6 +18,7 @@
     "sinon": "^7.5.0"
   },
   "dependencies": {
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^2.6.0",
+    "semver": "^6.3.0"
   }
 }
