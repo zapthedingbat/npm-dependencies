@@ -2,6 +2,16 @@
 
 Recursively lists all dependencies of a given NPM package.
 
+## Usage
+
+### CLI
+
+Link the package with `npm link`
+
+```
+npm-dependencies <package> <semver range>
+```
+
 ## Optimisations
 
 - NodeJS dosn't nativly cache DNS or respect TTLs, so every single HTTP request
