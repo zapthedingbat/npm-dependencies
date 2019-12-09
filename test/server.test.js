@@ -14,7 +14,6 @@ describe("server", function() {
       createServer: sandbox.stub(),
       listen: sandbox.stub()
     };
-    mockMemoize = sandbox.stub();
     mockDownload = sandbox.stub();
     mockCreateFetchTree = sandbox.stub();
     mockFetchTree = sandbox.stub();
