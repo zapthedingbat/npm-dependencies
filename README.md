@@ -12,6 +12,14 @@ Link the package with `npm link`
 npm-dependencies <package> <semver range>
 ```
 
+### Server
+
+```
+node src/server.js
+```
+
+You can then access the server on port 3000. E.g http://localhost:3000/react/16
+
 ## Optimisations
 
 - NodeJS dosn't nativly cache DNS or respect TTLs, so every single HTTP request
