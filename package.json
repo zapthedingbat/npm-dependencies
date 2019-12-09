@@ -1,0 +1,12 @@
+{
+  "name": "npm-dependencies",
+  "version": "1.0.0",
+  "description": "Recursively lists all dependencies of a given NPM package.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
