@@ -1,3 +1,4 @@
+const semver = require("semver");
 const selectPackage = require("./select-package");
 
 /**
@@ -7,6 +8,11 @@ const selectPackage = require("./select-package");
  * @param {function} download Fetch function that downloads a given URL
  */
 async function downloadPackage(id, range, download) {
+  // Check that the range is valid semver
+  if (!semver.validRange(range, { loose: true })) {
+    return null;
+  }
+
   const manifest = await download(`https://registry.npmjs.org/${id}`);
   const package = selectPackage(manifest, range);
   return package;
