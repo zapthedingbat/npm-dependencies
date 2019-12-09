@@ -4,6 +4,7 @@
   "description": "Recursively lists all dependencies of a given NPM package.",
   "main": "index.js",
   "scripts": {
+    "pretest": "prettier --check src/**/*.js",
     "test": "mocha"
   },
   "keywords": [],
@@ -12,6 +13,7 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "mocha": "^6.2.2",
+    "prettier": "^1.19.1",
     "sinon": "^7.5.0"
   }
 }
