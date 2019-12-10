@@ -3,6 +3,7 @@ const proxyquire = require("proxyquire");
 
 describe("server", function() {
   let sandbox;
+  let mockMemoize;
   let mockDownload;
   let mockCreateFetchTree;
   let mockFetchTree;
@@ -14,12 +15,14 @@ describe("server", function() {
       createServer: sandbox.stub(),
       listen: sandbox.stub()
     };
+    mockMemoize = sandbox.stub();
     mockDownload = sandbox.stub();
     mockCreateFetchTree = sandbox.stub();
     mockFetchTree = sandbox.stub();
     act = () => {
       proxyquire("../src/server", {
         http: mockHttp,
+        "../src/memoize": mockMemoize,
         "../src/download": mockDownload,
         "../src/fetch-tree": mockCreateFetchTree
       });
@@ -36,10 +39,23 @@ describe("server", function() {
     sandbox.reset();
   });
 
-  it("should create a treeFetcher with the download function", function() {
+  it("should memoize the download function", function() {
     act();
 
-    sandbox.assert.calledWith(mockCreateFetchTree, mockDownload);
+    sandbox.assert.calledWith(
+      mockMemoize,
+      mockDownload,
+      sinon.match.instanceOf(Map)
+    );
+  });
+
+  it("should create a treeFetcher with the memoized download function", function() {
+    const testDownloadFn = {};
+    mockMemoize.returns(testDownloadFn);
+
+    act();
+
+    sandbox.assert.calledWith(mockCreateFetchTree, testDownloadFn);
   });
 
   describe("on request", function() {

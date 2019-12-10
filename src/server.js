@@ -2,8 +2,11 @@
 const http = require("http");
 const download = require("./download");
 const createFetchTree = require("./fetch-tree");
+const memoize = require("./memoize");
 
-const fetchTree = createFetchTree(download);
+const cache = new Map();
+const memoizedDownload = memoize(download, cache);
+const fetchTree = createFetchTree(memoizedDownload);
 
 http
   .createServer(async (req, res) => {
