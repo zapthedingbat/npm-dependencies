@@ -2,7 +2,7 @@ const downloadPackage = require("./download-package");
 const getDependencies = require("./get-dependencies");
 
 function createFetchTree(download) {
-  async function fetchSubTree(id, range) {
+  async function fetchSubTree(id, range, stack) {
     const package = await downloadPackage(id, range, download);
     if (package) {
       const { version, dependencies } = package;
@@ -13,9 +13,18 @@ function createFetchTree(download) {
         dependencies: []
       };
 
-      if (dependencies) {
+      // Skip dependencies when there is a cyclical reference
+      const key = `${id}@${version}`;
+      if (stack.includes(key)) {
+        // Add property to the result to mark cyclical depencencies
+        result.cycle = true;
+      } else if (dependencies) {
         // Recusivly build dependency list
-        result.dependencies = await getDependencies(dependencies, fetchSubTree);
+        result.dependencies = await getDependencies(
+          dependencies,
+          stack.concat(key),
+          fetchSubTree
+        );
       }
       return result;
     }

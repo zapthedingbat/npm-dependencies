@@ -19,10 +19,15 @@ describe("get dependencies", function() {
       testId1: "testRange1",
       testId2: "testRange2"
     };
+    const testStack = [];
     const testNode = {};
     const mockCallback = sinon.stub().resolves(testNode);
 
-    const dependencies = await getDependencies(testDependencies, mockCallback);
+    const dependencies = await getDependencies(
+      testDependencies,
+      testStack,
+      mockCallback
+    );
 
     sandbox.assert.calledWith(mockCallback, "testId1", "testRange1");
     sandbox.assert.calledWith(mockCallback, "testId2", "testRange2");

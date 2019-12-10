@@ -83,11 +83,11 @@ describe("create tree fetcher", function() {
       mockGetDependencies
         .resolves()
         .onCall(0)
-        .callsFake(async (_dependencies, callback) => {
+        .callsFake(async (_dependencies, _stack, callback) => {
           callback("dependencyId1", "dependencyRange1", []);
         })
         .onCall(1)
-        .callsFake(async (_dependencies, callback) => {
+        .callsFake(async (_dependencies, _stack, callback) => {
           callback("dependencyId2", "dependencyRange2", []);
         });
 
@@ -96,6 +96,7 @@ describe("create tree fetcher", function() {
       sandbox.assert.calledWith(
         mockGetDependencies,
         testDependencies,
+        ["testPackage@testVersion"],
         sinon.match.func
       );
       sandbox.assert.calledWith(
@@ -108,6 +109,32 @@ describe("create tree fetcher", function() {
         "dependencyId2",
         "dependencyRange2"
       );
+    });
+
+    it("should not get cyclical dependencies", async function() {
+      const testDependencies = {};
+      mockDownloadPackage.returns({
+        version: "testVersion",
+        dependencies: testDependencies
+      });
+      mockGetDependencies
+        .resolves()
+        .callsFake(async (_dependencies, _stack, callback) =>
+          callback("testPackage", "testVersion", ["testPackage@testVersion"])
+        );
+
+      const tree = await fetchTree("testPackage", "1.0.0");
+
+      expect(tree).to.eqls({
+        id: "testPackage",
+        version: "testVersion",
+        dependencies: {
+          id: "testPackage",
+          version: "testVersion",
+          dependencies: [],
+          cycle: true
+        }
+      });
     });
   });
 });
