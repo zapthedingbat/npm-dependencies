@@ -5,12 +5,14 @@
  */
 async function getDependencies(dependencies, callback) {
   const nodes = [];
-  for (const [id, range] of Object.entries(dependencies)) {
-    const node = await callback(id, range);
-    if (node) {
-      nodes.push(node);
-    }
-  }
+  await Promise.all(
+    Object.entries(dependencies).map(async ([id, range]) => {
+      const node = await callback(id, range);
+      if (node) {
+        nodes.push(node);
+      }
+    })
+  );
   return nodes;
 }
 
